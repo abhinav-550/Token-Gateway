@@ -9,6 +9,7 @@ import { errorMiddleWare } from './middlewares/Error.js';
 import ejsMate from "ejs-mate"
 import path from "path"
 import { fileURLToPath } from 'url';
+import run from './utils/priceListing.js';
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -45,9 +46,14 @@ connection();
 
 app.use("/user", userRoutes);
 
+let cryptoData ;
+async function getPrices(){
+    cryptoData = await run();
+}
+getPrices();
 
 app.get('/' , (req, res , next) => {
-    res.render("index.ejs");
+    res.render("index.ejs", {cryptoData});
 })
 
 app.use(errorMiddleWare);
